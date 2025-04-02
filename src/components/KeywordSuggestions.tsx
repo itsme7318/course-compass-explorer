@@ -19,7 +19,7 @@ const KeywordSuggestions: React.FC<KeywordSuggestionsProps> = ({
           variant="outline"
           size="sm"
           onClick={() => onKeywordClick(keyword)}
-          className="text-xs rounded-full bg-[#0A2540]/10 border-[#0A2540]/20 text-[#0A2540] hover:bg-[#0A2540]/20 hover:text-[#0A2540] transition-colors"
+          className="text-xs rounded-full bg-gray-100 border-gray-200 text-gray-700 hover:bg-blue-50 hover:text-blue-700 hover:border-blue-200 transition-colors"
         >
           {keyword}
         </Button>

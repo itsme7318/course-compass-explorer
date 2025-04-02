@@ -15,8 +15,10 @@ const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
   // Find the playlist for this course
   const playlist = coursePlaylists.find(p => p.courseId === course.id);
   
+  const courseDescription = course.description || "Master in-demand skills with this comprehensive course designed for beginners and professionals alike.";
+  
   return (
-    <div className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-all flex flex-col h-full">
+    <div className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all flex flex-col h-full border border-gray-100">
       <div className="relative">
         <img 
           src={course.image}
@@ -24,8 +26,8 @@ const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
           className="h-48 w-full object-cover"
         />
         <div className="absolute top-3 right-3">
-          <Badge className={course.free ? "bg-[#00EA64] hover:bg-[#00C853] text-black" : "bg-[#0A2540] hover:bg-[#0A2540]/90"}>
-            {course.free ? "Free" : "Paid"}
+          <Badge className={course.free ? "bg-green-500 hover:bg-green-600 text-white" : "bg-blue-600 hover:bg-blue-700 text-white"}>
+            {course.free ? "Free" : "Premium"}
           </Badge>
         </div>
       </div>
@@ -33,7 +35,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
       <div className="p-5 flex flex-col h-full">
         <Badge className="w-fit mb-2" variant="outline">{course.category}</Badge>
         
-        <h3 className="text-lg font-semibold mb-2 text-[#0A2540]">{course.title}</h3>
+        <h3 className="text-lg font-semibold mb-2 text-gray-800">{course.title}</h3>
         
         <div className="flex items-center mb-3 text-sm text-gray-600">
           <span className="mr-3">{course.platform}</span>
@@ -61,10 +63,14 @@ const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
           <span className="ml-2 text-sm text-gray-600">{course.rating}/5</span>
         </div>
         
-        <p className="text-gray-700 text-sm flex-grow">{course.description || "Master in-demand skills with this comprehensive course designed for beginners and professionals alike."}</p>
+        <p className="text-gray-700 text-sm flex-grow">{courseDescription}</p>
         
         <div className="mt-4">
-          <Button className="w-full bg-[#00EA64] hover:bg-[#00C853] text-black">Start Learning</Button>
+          <Link to={`/course/${course.id}`} className="w-full block">
+            <Button className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-medium">
+              Start Learning
+            </Button>
+          </Link>
         </div>
       </div>
     </div>
