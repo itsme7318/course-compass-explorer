@@ -1,3 +1,4 @@
+
 export interface Course {
   id: number;
   title: string;
@@ -8,6 +9,7 @@ export interface Course {
   free: boolean;
   image: string;
   category: string;
+  description?: string; // Added description property as optional
 }
 
 const courses: Course[] = [

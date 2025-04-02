@@ -15,6 +15,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
   // Find the playlist for this course
   const playlist = coursePlaylists.find(p => p.courseId === course.id);
   
+  // Provide a default description if none exists
   const courseDescription = course.description || "Master in-demand skills with this comprehensive course designed for beginners and professionals alike.";
   
   return (
