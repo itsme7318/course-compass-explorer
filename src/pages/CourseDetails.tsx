@@ -13,6 +13,38 @@ const CourseDetails = () => {
   const [course, setCourse] = useState(courses.find(c => c.id === Number(id)));
   const playlist = coursePlaylists.find(p => p.courseId === course?.id);
 
+  // Map course platforms to their respective URLs
+  const getPlatformUrl = (platform: string) => {
+    switch (platform) {
+      case "Coursera":
+        return "https://www.coursera.org";
+      case "Udemy":
+        return "https://www.udemy.com";
+      case "edX":
+        return "https://www.edx.org";
+      case "Pluralsight":
+        return "https://www.pluralsight.com";
+      case "AWS Training":
+        return "https://aws.amazon.com/training";
+      case "LinkedIn Learning":
+        return "https://www.linkedin.com/learning";
+      case "Cybrary":
+        return "https://www.cybrary.it";
+      case "Qualcomm Academy":
+        return "https://www.qualcomm.com";
+      case "MIT OpenCourseWare":
+        return "https://ocw.mit.edu";
+      case "Yonsei University":
+        return "https://www.yonsei.ac.kr/en_sc/";
+      case "École Polytechnique Fédérale de Lausanne":
+        return "https://www.epfl.ch/en/";
+      case "Institut Mines-Télécom":
+        return "https://www.imt.fr/en/";
+      default:
+        return "https://www.google.com/search?q=" + encodeURIComponent(`${course?.title} ${platform} course`);
+    }
+  };
+
   useEffect(() => {
     // Scroll to top when component mounts
     window.scrollTo(0, 0);
@@ -92,9 +124,15 @@ const CourseDetails = () => {
               )}
               
               <div className="flex flex-wrap gap-4">
-                <Button size="lg" className="bg-green-500 hover:bg-green-600 text-white">
-                  Enroll Now
-                </Button>
+                <a 
+                  href={getPlatformUrl(course.platform)} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                >
+                  <Button size="lg" className="bg-green-500 hover:bg-green-600 text-white">
+                    Enroll Now
+                  </Button>
+                </a>
                 
                 {playlist && (
                   <a
@@ -149,9 +187,15 @@ const CourseDetails = () => {
                 </ul>
                 
                 <div className="border-t border-gray-200 mt-6 pt-6">
-                  <Button size="lg" className="w-full bg-green-500 hover:bg-green-600 text-white">
-                    Start Learning Today
-                  </Button>
+                  <a 
+                    href={getPlatformUrl(course.platform)} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                  >
+                    <Button size="lg" className="w-full bg-green-500 hover:bg-green-600 text-white">
+                      Start Learning Today
+                    </Button>
+                  </a>
                 </div>
               </div>
             </div>

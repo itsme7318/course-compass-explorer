@@ -18,6 +18,38 @@ const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
   // Provide a default description if none exists
   const courseDescription = course.description || "Master in-demand skills with this comprehensive course designed for beginners and professionals alike.";
   
+  // Map course platforms to their respective URLs
+  const getPlatformUrl = (platform: string) => {
+    switch (platform) {
+      case "Coursera":
+        return "https://www.coursera.org";
+      case "Udemy":
+        return "https://www.udemy.com";
+      case "edX":
+        return "https://www.edx.org";
+      case "Pluralsight":
+        return "https://www.pluralsight.com";
+      case "AWS Training":
+        return "https://aws.amazon.com/training";
+      case "LinkedIn Learning":
+        return "https://www.linkedin.com/learning";
+      case "Cybrary":
+        return "https://www.cybrary.it";
+      case "Qualcomm Academy":
+        return "https://www.qualcomm.com";
+      case "MIT OpenCourseWare":
+        return "https://ocw.mit.edu";
+      case "Yonsei University":
+        return "https://www.yonsei.ac.kr/en_sc/";
+      case "École Polytechnique Fédérale de Lausanne":
+        return "https://www.epfl.ch/en/";
+      case "Institut Mines-Télécom":
+        return "https://www.imt.fr/en/";
+      default:
+        return "https://www.google.com/search?q=" + encodeURIComponent(`${course.title} ${platform} course`);
+    }
+  };
+  
   return (
     <div className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all flex flex-col h-full border border-gray-100">
       <div className="relative">
@@ -66,12 +98,17 @@ const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
         
         <p className="text-gray-700 text-sm flex-grow">{courseDescription}</p>
         
-        <div className="mt-4">
-          <Link to={`/course/${course.id}`} className="w-full block">
-            <Button className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-medium">
-              Start Learning
+        <div className="mt-4 flex space-x-2">
+          <Link to={`/course/${course.id}`} className="flex-1">
+            <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium">
+              View Details
             </Button>
           </Link>
+          <a href={getPlatformUrl(course.platform)} target="_blank" rel="noopener noreferrer" className="flex-1">
+            <Button className="w-full bg-green-500 hover:bg-green-600 text-white font-medium">
+              Enroll
+            </Button>
+          </a>
         </div>
       </div>
     </div>
