@@ -1,121 +1,49 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Search } from "lucide-react";
+import KeywordSuggestions from "@/components/KeywordSuggestions";
+import courses, { Course } from "@/data/courses";
 
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
-
-  // Mock course data with additional IT courses
-  const courses = [
-    {
-      id: 1,
-      title: "Introduction to Python Programming",
-      platform: "Coursera",
-      price: "$49.99",
-      rating: 4.7,
-      duration: "6 weeks",
-      free: false,
-      image: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?auto=format&fit=crop&w=500&q=60"
-    },
-    {
-      id: 2,
-      title: "Web Development Bootcamp",
-      platform: "Udemy",
-      price: "$89.99",
-      rating: 4.8,
-      duration: "12 weeks",
-      free: false,
-      image: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=500&q=60"
-    },
-    {
-      id: 3,
-      title: "Machine Learning Fundamentals",
-      platform: "edX",
-      price: "Free",
-      rating: 4.5,
-      duration: "8 weeks",
-      free: true,
-      image: "https://images.unsplash.com/photo-1649972904349-6e44c42644a7?auto=format&fit=crop&w=500&q=60"
-    },
-    {
-      id: 4,
-      title: "Advanced JavaScript Concepts",
-      platform: "Pluralsight",
-      price: "$29.99",
-      rating: 4.6,
-      duration: "4 weeks",
-      free: false,
-      image: "https://images.unsplash.com/photo-1598257006458-087169a1f08d?auto=format&fit=crop&w=500&q=60"
-    },
-    {
-      id: 5,
-      title: "React JS Masterclass",
-      platform: "Udemy",
-      price: "$79.99",
-      rating: 4.9,
-      duration: "10 weeks",
-      free: false,
-      image: "https://images.unsplash.com/photo-1633356122102-3fe601e05bd2?auto=format&fit=crop&w=500&q=60"
-    },
-    {
-      id: 6,
-      title: "Data Structures & Algorithms",
-      platform: "Coursera",
-      price: "$59.99",
-      rating: 4.7,
-      duration: "8 weeks",
-      free: false,
-      image: "https://images.unsplash.com/photo-1515879218367-8466d910aaa4?auto=format&fit=crop&w=500&q=60"
-    },
-    {
-      id: 7,
-      title: "Introduction to Cloud Computing",
-      platform: "AWS Training",
-      price: "Free",
-      rating: 4.4,
-      duration: "6 weeks",
-      free: true,
-      image: "https://images.unsplash.com/photo-1544197150-b99a580bb7a8?auto=format&fit=crop&w=500&q=60"
-    },
-    {
-      id: 8,
-      title: "Cybersecurity Fundamentals",
-      platform: "edX",
-      price: "Free",
-      rating: 4.6,
-      duration: "5 weeks",
-      free: true,
-      image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=500&q=60"
-    },
-    {
-      id: 9,
-      title: "Full Stack Development with MERN",
-      platform: "Udemy",
-      price: "$94.99",
-      rating: 4.8,
-      duration: "14 weeks",
-      free: false,
-      image: "https://images.unsplash.com/photo-1547658719-da2b51169166?auto=format&fit=crop&w=500&q=60"
-    }
+  const [filteredCourses, setFilteredCourses] = useState<Course[]>(courses);
+  
+  // Popular keywords for suggestions
+  const popularKeywords = [
+    "Python", "JavaScript", "Web Development", "Machine Learning", 
+    "Cloud", "AWS", "Cybersecurity", "IT Support", "5G", "Networking",
+    "Telecom", "DevOps", "Blockchain", "Java", "SQL", "Data Science"
   ];
-
+  
   // Filter courses based on search query
-  const filteredCourses = courses.filter(course => 
-    searchQuery === "" || 
-    course.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    course.platform.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  useEffect(() => {
+    if (searchQuery.trim() === "") {
+      setFilteredCourses(courses);
+    } else {
+      const lowercaseQuery = searchQuery.toLowerCase();
+      const filtered = courses.filter(course => 
+        course.title.toLowerCase().includes(lowercaseQuery) ||
+        course.platform.toLowerCase().includes(lowercaseQuery) ||
+        course.category.toLowerCase().includes(lowercaseQuery)
+      );
+      setFilteredCourses(filtered);
+    }
+  }, [searchQuery]);
 
   // Handle search submission
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    // The filtering is already happening reactively, but we could add additional logic here
     console.log("Searching for:", searchQuery);
+  };
+
+  // Handle keyword suggestion click
+  const handleKeywordClick = (keyword: string) => {
+    setSearchQuery(keyword);
   };
 
   return (
@@ -138,6 +66,13 @@ const Index = () => {
             <Search className="h-4 w-4" />
           </Button>
         </form>
+        
+        <div className="w-full max-w-xl">
+          <KeywordSuggestions 
+            keywords={popularKeywords} 
+            onKeywordClick={handleKeywordClick} 
+          />
+        </div>
       </header>
 
       <Tabs defaultValue="all" className="mb-8">
@@ -177,6 +112,7 @@ const Index = () => {
                     <span className="ml-2 text-sm text-muted-foreground">{course.rating}/5</span>
                   </div>
                   <p className="font-semibold">{course.price}</p>
+                  <Badge className="mt-2" variant="outline">{course.category}</Badge>
                 </CardContent>
                 <CardFooter>
                   <Button className="w-full">View Course</Button>
@@ -213,6 +149,7 @@ const Index = () => {
                     <span className="ml-2 text-sm text-muted-foreground">{course.rating}/5</span>
                   </div>
                   <p className="font-semibold">{course.price}</p>
+                  <Badge className="mt-2" variant="outline">{course.category}</Badge>
                 </CardContent>
                 <CardFooter>
                   <Button className="w-full">View Course</Button>
@@ -249,6 +186,7 @@ const Index = () => {
                     <span className="ml-2 text-sm text-muted-foreground">{course.rating}/5</span>
                   </div>
                   <p className="font-semibold">{course.price}</p>
+                  <Badge className="mt-2" variant="outline">{course.category}</Badge>
                 </CardContent>
                 <CardFooter>
                   <Button className="w-full">View Course</Button>
@@ -287,6 +225,7 @@ const Index = () => {
                     <span className="ml-2 text-sm text-muted-foreground">{course.rating}/5</span>
                   </div>
                   <p className="font-semibold">{course.price}</p>
+                  <Badge className="mt-2" variant="outline">{course.category}</Badge>
                 </CardContent>
                 <CardFooter>
                   <Button className="w-full">View Course</Button>
