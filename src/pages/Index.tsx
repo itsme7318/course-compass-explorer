@@ -1,12 +1,13 @@
 
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Badge } from "@/components/ui/badge";
 import { Search } from "lucide-react";
 import KeywordSuggestions from "@/components/KeywordSuggestions";
+import CourseCard from "@/components/CourseCard";
+import Header from "@/components/Header";
 import courses, { Course } from "@/data/courses";
 
 const Index = () => {
@@ -17,7 +18,8 @@ const Index = () => {
   const popularKeywords = [
     "Python", "JavaScript", "Web Development", "Machine Learning", 
     "Cloud", "AWS", "Cybersecurity", "IT Support", "5G", "Networking",
-    "Telecom", "DevOps", "Blockchain", "Java", "SQL", "Data Science"
+    "Telecom", "DevOps", "Blockchain", "Java", "SQL", "Data Science",
+    "IoT", "TCP/IP", "VoIP", "Optical Fiber", "Wireless", "MPLS"
   ];
   
   // Filter courses based on search query
@@ -47,194 +49,123 @@ const Index = () => {
   };
 
   return (
-    <div className="container mx-auto p-4">
-      <header className="flex flex-col items-center justify-center text-center py-12 mb-6">
-        <h1 className="text-4xl font-bold tracking-tight mb-4">Course Compass Explorer</h1>
-        <p className="text-lg text-muted-foreground max-w-2xl">
-          Discover and compare online courses from top platforms. Find the perfect learning path for your goals.
-        </p>
-        
-        <form onSubmit={handleSearch} className="flex w-full max-w-xl mt-8 relative">
+    <div className="min-h-screen bg-gray-50">
+      <Header />
+      
+      <div className="bg-[#001B3D] text-white py-16">
+        <div className="container mx-auto px-4">
+          <div className="max-w-3xl mx-auto text-center mb-8">
+            <h1 className="text-5xl font-bold mb-6">Learn telecom and IT skills</h1>
+            <p className="text-xl mb-8">
+              Master in-demand skills in telecommunications, networking, and IT through 
+              interactive courses, real-world projects, and industry recognized certifications
+            </p>
+            
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button className="text-black bg-[#00EA64] hover:bg-[#00C853] font-medium text-lg py-6 px-8">
+                Start Learning For Free
+              </Button>
+              
+              <Button variant="outline" className="border-white text-white hover:bg-white/10 text-lg py-6 px-8">
+                For Business
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div className="container mx-auto px-4 py-10">
+        <form onSubmit={handleSearch} className="max-w-2xl mx-auto relative mb-6">
           <Input
             type="text"
             placeholder="Search for courses, topics, or skills..."
-            className="pr-10"
+            className="pr-10 h-12 shadow-sm"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
-          <Button type="submit" size="icon" className="absolute right-0 top-0">
+          <Button type="submit" size="icon" className="absolute right-1 top-1 h-10 w-10">
             <Search className="h-4 w-4" />
           </Button>
         </form>
         
-        <div className="w-full max-w-xl">
+        <div className="max-w-2xl mx-auto mb-10">
+          <p className="text-sm text-gray-600 mb-2">Popular Searches:</p>
           <KeywordSuggestions 
             keywords={popularKeywords} 
             onKeywordClick={handleKeywordClick} 
           />
         </div>
-      </header>
 
-      <Tabs defaultValue="all" className="mb-8">
-        <TabsList className="w-full max-w-lg mx-auto grid grid-cols-4">
-          <TabsTrigger value="all">All Courses</TabsTrigger>
-          <TabsTrigger value="free">Free</TabsTrigger>
-          <TabsTrigger value="paid">Paid</TabsTrigger>
-          <TabsTrigger value="popular">Popular</TabsTrigger>
-        </TabsList>
+        <Tabs defaultValue="all" className="mb-10">
+          <TabsList className="w-full max-w-xl mx-auto grid grid-cols-5 mb-6">
+            <TabsTrigger value="all" className="rounded-full">All Courses</TabsTrigger>
+            <TabsTrigger value="telecom" className="rounded-full">Telecom</TabsTrigger>
+            <TabsTrigger value="it" className="rounded-full">IT</TabsTrigger>
+            <TabsTrigger value="free" className="rounded-full">Free</TabsTrigger>
+            <TabsTrigger value="popular" className="rounded-full">Popular</TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="all" className="mt-6 animate-fade-in">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredCourses.map((course) => (
+                <CourseCard key={course.id} course={course} />
+              ))}
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="telecom" className="mt-6 animate-fade-in">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredCourses
+                .filter(course => course.category === "Telecommunications" || course.category === "Telecom")
+                .map((course) => (
+                  <CourseCard key={course.id} course={course} />
+                ))
+              }
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="it" className="mt-6 animate-fade-in">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredCourses
+                .filter(course => course.category === "IT" || course.category === "Information Technology")
+                .map((course) => (
+                  <CourseCard key={course.id} course={course} />
+                ))
+              }
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="free" className="mt-6 animate-fade-in">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredCourses
+                .filter(course => course.free)
+                .map((course) => (
+                  <CourseCard key={course.id} course={course} />
+                ))
+              }
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="popular" className="mt-6 animate-fade-in">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredCourses
+                .filter(course => course.rating > 4.5)
+                .map((course) => (
+                  <CourseCard key={course.id} course={course} />
+                ))
+              }
+            </div>
+          </TabsContent>
+        </Tabs>
         
-        <TabsContent value="all" className="mt-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredCourses.map((course) => (
-              <Card key={course.id} className="overflow-hidden">
-                <img 
-                  src={course.image}
-                  alt={course.title}
-                  className="h-48 w-full object-cover"
-                />
-                <CardHeader>
-                  <div className="flex justify-between items-start">
-                    <CardTitle className="text-xl">{course.title}</CardTitle>
-                    <Badge variant={course.free ? "secondary" : "default"}>
-                      {course.free ? "Free" : "Paid"}
-                    </Badge>
-                  </div>
-                  <CardDescription>
-                    {course.platform} • {course.duration}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex items-center mb-2">
-                    <div className="flex text-yellow-400">
-                      {"★".repeat(Math.floor(course.rating))}
-                      {"☆".repeat(5 - Math.floor(course.rating))}
-                    </div>
-                    <span className="ml-2 text-sm text-muted-foreground">{course.rating}/5</span>
-                  </div>
-                  <p className="font-semibold">{course.price}</p>
-                  <Badge className="mt-2" variant="outline">{course.category}</Badge>
-                </CardContent>
-                <CardFooter>
-                  <Button className="w-full">View Course</Button>
-                </CardFooter>
-              </Card>
-            ))}
-          </div>
-        </TabsContent>
-        
-        <TabsContent value="free" className="mt-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredCourses.filter(course => course.free).map((course) => (
-              <Card key={course.id} className="overflow-hidden">
-                <img 
-                  src={course.image}
-                  alt={course.title}
-                  className="h-48 w-full object-cover"
-                />
-                <CardHeader>
-                  <div className="flex justify-between items-start">
-                    <CardTitle className="text-xl">{course.title}</CardTitle>
-                    <Badge variant="secondary">Free</Badge>
-                  </div>
-                  <CardDescription>
-                    {course.platform} • {course.duration}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex items-center mb-2">
-                    <div className="flex text-yellow-400">
-                      {"★".repeat(Math.floor(course.rating))}
-                      {"☆".repeat(5 - Math.floor(course.rating))}
-                    </div>
-                    <span className="ml-2 text-sm text-muted-foreground">{course.rating}/5</span>
-                  </div>
-                  <p className="font-semibold">{course.price}</p>
-                  <Badge className="mt-2" variant="outline">{course.category}</Badge>
-                </CardContent>
-                <CardFooter>
-                  <Button className="w-full">View Course</Button>
-                </CardFooter>
-              </Card>
-            ))}
-          </div>
-        </TabsContent>
-        
-        <TabsContent value="paid" className="mt-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredCourses.filter(course => !course.free).map((course) => (
-              <Card key={course.id} className="overflow-hidden">
-                <img 
-                  src={course.image}
-                  alt={course.title}
-                  className="h-48 w-full object-cover"
-                />
-                <CardHeader>
-                  <div className="flex justify-between items-start">
-                    <CardTitle className="text-xl">{course.title}</CardTitle>
-                    <Badge>Paid</Badge>
-                  </div>
-                  <CardDescription>
-                    {course.platform} • {course.duration}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex items-center mb-2">
-                    <div className="flex text-yellow-400">
-                      {"★".repeat(Math.floor(course.rating))}
-                      {"☆".repeat(5 - Math.floor(course.rating))}
-                    </div>
-                    <span className="ml-2 text-sm text-muted-foreground">{course.rating}/5</span>
-                  </div>
-                  <p className="font-semibold">{course.price}</p>
-                  <Badge className="mt-2" variant="outline">{course.category}</Badge>
-                </CardContent>
-                <CardFooter>
-                  <Button className="w-full">View Course</Button>
-                </CardFooter>
-              </Card>
-            ))}
-          </div>
-        </TabsContent>
-        
-        <TabsContent value="popular" className="mt-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredCourses.filter(course => course.rating > 4.6).map((course) => (
-              <Card key={course.id} className="overflow-hidden">
-                <img 
-                  src={course.image}
-                  alt={course.title}
-                  className="h-48 w-full object-cover"
-                />
-                <CardHeader>
-                  <div className="flex justify-between items-start">
-                    <CardTitle className="text-xl">{course.title}</CardTitle>
-                    <Badge variant={course.free ? "secondary" : "default"}>
-                      {course.free ? "Free" : "Paid"}
-                    </Badge>
-                  </div>
-                  <CardDescription>
-                    {course.platform} • {course.duration}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex items-center mb-2">
-                    <div className="flex text-yellow-400">
-                      {"★".repeat(Math.floor(course.rating))}
-                      {"☆".repeat(5 - Math.floor(course.rating))}
-                    </div>
-                    <span className="ml-2 text-sm text-muted-foreground">{course.rating}/5</span>
-                  </div>
-                  <p className="font-semibold">{course.price}</p>
-                  <Badge className="mt-2" variant="outline">{course.category}</Badge>
-                </CardContent>
-                <CardFooter>
-                  <Button className="w-full">View Course</Button>
-                </CardFooter>
-              </Card>
-            ))}
-          </div>
-        </TabsContent>
-      </Tabs>
+        <div className="text-center mt-10">
+          <Link to="/login">
+            <Button variant="outline" className="mx-auto">
+              View All Courses
+            </Button>
+          </Link>
+        </div>
+      </div>
     </div>
   );
 };
