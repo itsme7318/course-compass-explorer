@@ -10,7 +10,7 @@ import { Search } from "lucide-react";
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Mock course data
+  // Mock course data with additional IT courses
   const courses = [
     {
       id: 1,
@@ -42,7 +42,81 @@ const Index = () => {
       free: true,
       image: "https://images.unsplash.com/photo-1649972904349-6e44c42644a7?auto=format&fit=crop&w=500&q=60"
     },
+    {
+      id: 4,
+      title: "Advanced JavaScript Concepts",
+      platform: "Pluralsight",
+      price: "$29.99",
+      rating: 4.6,
+      duration: "4 weeks",
+      free: false,
+      image: "https://images.unsplash.com/photo-1598257006458-087169a1f08d?auto=format&fit=crop&w=500&q=60"
+    },
+    {
+      id: 5,
+      title: "React JS Masterclass",
+      platform: "Udemy",
+      price: "$79.99",
+      rating: 4.9,
+      duration: "10 weeks",
+      free: false,
+      image: "https://images.unsplash.com/photo-1633356122102-3fe601e05bd2?auto=format&fit=crop&w=500&q=60"
+    },
+    {
+      id: 6,
+      title: "Data Structures & Algorithms",
+      platform: "Coursera",
+      price: "$59.99",
+      rating: 4.7,
+      duration: "8 weeks",
+      free: false,
+      image: "https://images.unsplash.com/photo-1515879218367-8466d910aaa4?auto=format&fit=crop&w=500&q=60"
+    },
+    {
+      id: 7,
+      title: "Introduction to Cloud Computing",
+      platform: "AWS Training",
+      price: "Free",
+      rating: 4.4,
+      duration: "6 weeks",
+      free: true,
+      image: "https://images.unsplash.com/photo-1544197150-b99a580bb7a8?auto=format&fit=crop&w=500&q=60"
+    },
+    {
+      id: 8,
+      title: "Cybersecurity Fundamentals",
+      platform: "edX",
+      price: "Free",
+      rating: 4.6,
+      duration: "5 weeks",
+      free: true,
+      image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=500&q=60"
+    },
+    {
+      id: 9,
+      title: "Full Stack Development with MERN",
+      platform: "Udemy",
+      price: "$94.99",
+      rating: 4.8,
+      duration: "14 weeks",
+      free: false,
+      image: "https://images.unsplash.com/photo-1547658719-da2b51169166?auto=format&fit=crop&w=500&q=60"
+    }
   ];
+
+  // Filter courses based on search query
+  const filteredCourses = courses.filter(course => 
+    searchQuery === "" || 
+    course.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    course.platform.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  // Handle search submission
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    // The filtering is already happening reactively, but we could add additional logic here
+    console.log("Searching for:", searchQuery);
+  };
 
   return (
     <div className="container mx-auto p-4">
@@ -52,7 +126,7 @@ const Index = () => {
           Discover and compare online courses from top platforms. Find the perfect learning path for your goals.
         </p>
         
-        <div className="flex w-full max-w-xl mt-8 relative">
+        <form onSubmit={handleSearch} className="flex w-full max-w-xl mt-8 relative">
           <Input
             type="text"
             placeholder="Search for courses, topics, or skills..."
@@ -60,10 +134,10 @@ const Index = () => {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
-          <Button size="icon" className="absolute right-0 top-0">
+          <Button type="submit" size="icon" className="absolute right-0 top-0">
             <Search className="h-4 w-4" />
           </Button>
-        </div>
+        </form>
       </header>
 
       <Tabs defaultValue="all" className="mb-8">
@@ -76,7 +150,7 @@ const Index = () => {
         
         <TabsContent value="all" className="mt-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {courses.map((course) => (
+            {filteredCourses.map((course) => (
               <Card key={course.id} className="overflow-hidden">
                 <img 
                   src={course.image}
@@ -114,7 +188,7 @@ const Index = () => {
         
         <TabsContent value="free" className="mt-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {courses.filter(course => course.free).map((course) => (
+            {filteredCourses.filter(course => course.free).map((course) => (
               <Card key={course.id} className="overflow-hidden">
                 <img 
                   src={course.image}
@@ -150,7 +224,7 @@ const Index = () => {
         
         <TabsContent value="paid" className="mt-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {courses.filter(course => !course.free).map((course) => (
+            {filteredCourses.filter(course => !course.free).map((course) => (
               <Card key={course.id} className="overflow-hidden">
                 <img 
                   src={course.image}
@@ -186,7 +260,7 @@ const Index = () => {
         
         <TabsContent value="popular" className="mt-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {courses.filter(course => course.rating > 4.6).map((course) => (
+            {filteredCourses.filter(course => course.rating > 4.6).map((course) => (
               <Card key={course.id} className="overflow-hidden">
                 <img 
                   src={course.image}
